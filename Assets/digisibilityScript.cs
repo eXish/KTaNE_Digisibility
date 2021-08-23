@@ -77,8 +77,7 @@ public class digisibilityScript : MonoBehaviour {
 						{
 							Module.HandlePass();
 							Text[0].text = "Good job!";
-							Text[1].text = "P\no\ng\ng\ne\nr\ns";
-							Text[1].lineSpacing = 0.55f;
+							Text[1].text = "1\nof\n1";
 							for (int i = 2; i < Text.Length; i++)
 							{
 								Text[i].text = "";
@@ -167,7 +166,7 @@ public class digisibilityScript : MonoBehaviour {
 					}
 				}
 			}
-			if (trials.Count(x => x.ToString().Length == 9) > 0)
+			if (trials.Count(x => x.ToString().Length == 9) == 1)
 			{
 				return new int[][] { numbers, trials.Where(x => x.ToString().Length == 9).ToArray(), new int[] { } };
 			}
@@ -175,7 +174,7 @@ public class digisibilityScript : MonoBehaviour {
 	}
 
 #pragma warning disable 414
-	private string TwitchHelpMessage = "'!{0} 381654729' to press those positions. All positions must be unique and between 1 and 9.";
+	private string TwitchHelpMessage = "'!{0} 381654729' to press those labels. The numbers inputted must be an exact rearrangement of the numbers on the module.";
 #pragma warning restore 414
 	IEnumerator ProcessTwitchCommand(string command)
 	{
@@ -213,7 +212,7 @@ public class digisibilityScript : MonoBehaviour {
 				{
 					Button[j].OnInteract();
 					steady = false;
-					yield return new WaitForSeconds(0.1f);
+					yield return null;
 				}
 			}
 		}
