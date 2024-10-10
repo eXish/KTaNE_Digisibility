@@ -5,6 +5,9 @@ using System.Linq;
 using UnityEngine;
 using KModkit;
 using Rnd = UnityEngine.Random;
+using System.Reflection;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 public class digisibilityScript : MonoBehaviour {
 
@@ -14,7 +17,14 @@ public class digisibilityScript : MonoBehaviour {
 	public TextMesh[] Text;
 	public GameObject Statuslight;
 	public KMBombModule Module;
+	public KMModSettings ModSettings;
 
+	public class ModSettingsJSON
+	{
+		public bool enableLegacyVersion;
+	}
+
+	private bool enableLegVersion;
 	private bool solved;
 	private int[][] Data = { new int[] { } };
 	private int[] input = { };
@@ -77,7 +87,6 @@ public class digisibilityScript : MonoBehaviour {
 						{
 							Module.HandlePass();
 							Text[0].text = "Good job!";
-							Text[1].text = "1\nof\n1";
 							for (int i = 2; i < Text.Length; i++)
 							{
 								Text[i].text = "";
@@ -105,6 +114,7 @@ public class digisibilityScript : MonoBehaviour {
 	void Awake()
 	{
 		_moduleID = _moduleIdCounter++;
+		enableLegVersion = GetLegacySetting();
 		for (int i = 0; i < Button.Length; i++)
 		{
 			Button[i].OnInteract += ButtonPress(i);
@@ -119,6 +129,31 @@ public class digisibilityScript : MonoBehaviour {
 		for (int i = 0; i < 9; i++)
 		{
 			Text[i + 2].text = Data[0][i].ToString();
+		}
+	}
+
+	bool GetLegacySetting()
+    {
+		string missionDesc = KTMissionGetter.Mission.Description;
+		if (missionDesc != null)
+		{
+			Regex regex = new Regex(@"\[Digisibility\] Legacy");
+			var match = regex.Match(missionDesc);
+			if (match.Success)
+				return true;
+		}
+		string missionId = GetMissionID();
+		if (missionId != "undefined" && missionId != "custom")
+			return false;
+		try
+		{
+			ModSettingsJSON settings = JsonConvert.DeserializeObject<ModSettingsJSON>(ModSettings.Settings);
+			if (settings != null)
+				return settings.enableLegacyVersion;
+			return false;
+		}
+		catch (JsonReaderException) {
+			return false;
 		}
 	}
 
@@ -166,10 +201,25 @@ public class digisibilityScript : MonoBehaviour {
 					}
 				}
 			}
-			if (trials.Count(x => x.ToString().Length == 9) == 1)
+			if ((enableLegVersion && trials.Count(x => x.ToString().Length == 9) > 0) || (!enableLegVersion && trials.Count(x => x.ToString().Length == 9) == 1))
 			{
 				return new int[][] { numbers, trials.Where(x => x.ToString().Length == 9).ToArray(), new int[] { } };
 			}
+		}
+	}
+
+	string GetMissionID()
+	{
+		try
+		{
+			Component gameplayState = GameObject.Find("GameplayState(Clone)").GetComponent("GameplayState");
+			Type type = gameplayState.GetType();
+			FieldInfo fieldMission = type.GetField("MissionToLoad", BindingFlags.Public | BindingFlags.Static);
+			return fieldMission.GetValue(gameplayState).ToString();
+		}
+		catch (NullReferenceException)
+		{
+			return "undefined";
 		}
 	}
 

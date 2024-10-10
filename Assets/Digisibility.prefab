@@ -306,6 +306,7 @@ GameObject:
   - component: {fileID: 114285193024310244}
   - component: {fileID: 114670001402824770}
   - component: {fileID: 114794321272763426}
+  - component: {fileID: 114665374342817270}
   m_Layer: 0
   m_Name: Digisibility
   m_TagString: Untagged
@@ -2807,6 +2808,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - Unlit/Color
+--- !u!114 &114665374342817270
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1374775029386076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -289456416, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Settings: '{   "enableLegacyVersion": false }'
+  SettingsPath: 
 --- !u!114 &114670001402824770
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2830,7 +2844,7 @@ MonoBehaviour:
   - {fileID: 114112042623718726}
   - {fileID: 114401079471770122}
   IsPassThrough: 0
-  ChildRowLength: 0
+  ChildRowLength: 3
   Highlight: {fileID: 114097489684032224}
   SelectableColliders: []
   DefaultSelectableIndex: 0
@@ -2953,6 +2967,7 @@ MonoBehaviour:
   - {fileID: 102638822748871746}
   Statuslight: {fileID: 1558785671316724}
   Module: {fileID: 114285193024310244}
+  ModSettings: {fileID: 114665374342817270}
 --- !u!114 &114810419278493352
 MonoBehaviour:
   m_ObjectHideFlags: 1
